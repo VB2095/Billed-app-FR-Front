@@ -20,10 +20,24 @@ export default class NewBill {
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
+
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
-    formData.append('file', file)
-    formData.append('email', email)
+    const fileTypes = ['image/png', 'image/jpeg', 'image/jpg']
+    
+    let fileIsOk = false
+
+    for (let i = 0; i < fileTypes.length; i++) {
+      if (file.type === fileTypes[i]) {
+        fileIsOk = true
+        formData.append('file', file)
+      }
+    }
+    if (!fileIsOk) {
+      alert('Le fichier doit être au format png, jpeg ou jpg')
+    } else {
+      formData.append('email', email)
+    console.log('formData =', formData)
 
     this.store
       .bills()
@@ -39,8 +53,10 @@ export default class NewBill {
         this.fileUrl = fileUrl
         this.fileName = fileName
       }).catch(error => console.error(error))
+    }
   }
   handleSubmit = e => {
+  if(this.billId) { // if the file has been uploaded
     e.preventDefault()
     console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
     const email = JSON.parse(localStorage.getItem("user")).email
@@ -48,7 +64,7 @@ export default class NewBill {
       email,
       type: e.target.querySelector(`select[data-testid="expense-type"]`).value,
       name:  e.target.querySelector(`input[data-testid="expense-name"]`).value,
-      amount: parseInt(e.target.querySelector(`input[data-testid="amount"]`).value),
+      amount: parseInt(e.target.querySelector(`input[data-testid="amount"]`).value) ?? 0,
       date:  e.target.querySelector(`input[data-testid="datepicker"]`).value,
       vat: e.target.querySelector(`input[data-testid="vat"]`).value,
       pct: parseInt(e.target.querySelector(`input[data-testid="pct"]`).value) || 20,
@@ -59,6 +75,11 @@ export default class NewBill {
     }
     this.updateBill(bill)
     this.onNavigate(ROUTES_PATH['Bills'])
+  } else {
+    //dont submit the form and stay on the page without redirecting
+    e.preventDefault()
+    alert('Veuillez ajouter une image au format jpg, jpeg ou png')
+  }
   }
 
   // not need to cover this function by tests

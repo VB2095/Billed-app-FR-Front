@@ -52,7 +52,7 @@ export default class {
               }
             }
           })
-          console.log('length', bills.length)
+          console.log('length', bills)
           const sortedBills = bills.sort(compareBillsByDate);
             return sortedBills;
         return bills
