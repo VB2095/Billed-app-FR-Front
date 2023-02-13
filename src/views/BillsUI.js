@@ -20,9 +20,16 @@ const row = (bill) => {
   }
 
 const rows = (data) => {
-  // return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
-  //return bills with date from oldest to newest
-  return (data && data.length) ? (data.sort((a, b) => new Date(a.date) - new Date(b.date)).map(bill => row(bill)).join("") ): ""
+
+
+  if (data && data.length) {
+    //fonction de tri à bulle
+    const antiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
+    //Tri des data
+    const dataSorted = data.sort(antiChrono)
+    //retourne html des bills triées
+    return dataSorted.map(bill => row(bill))
+  }
 }
 
 export default ({ data: bills, loading, error }) => {

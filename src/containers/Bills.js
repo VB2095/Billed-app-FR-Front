@@ -1,7 +1,7 @@
 import { ROUTES_PATH } from '../constants/routes.js'
 import { formatDate, formatStatus } from "../app/format.js"
 import Logout from "./Logout.js"
-import { compareBillsByDate } from '../app/helpers.js'
+
 export default class {
   constructor({ document, onNavigate, store, localStorage }) {
     this.document = document
@@ -53,9 +53,8 @@ export default class {
             }
           })
           console.log('length', bills)
-          const sortedBills = bills.sort(compareBillsByDate);
-            return sortedBills;
-        return bills
+          return bills
+      
       })
     }
   }
